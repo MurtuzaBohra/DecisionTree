@@ -1,6 +1,6 @@
-# Decision Tree
+# Numpy Implementation for Decision Tree.
 ----------------------------------------------
-Description:
+# Description:
 1) This is an N-ary Decision tree(there are variants of it to built binary decision tree for continuous valued attributes in the data.) and maximum depth of tree is equal to maximum number of attributes in the data. This is a binary classification decision tree with class labels as 0 and 1.
 
 2) Important: train.csv and test.csv should have the header(header of the attributes) row in the first line. Columns in the train.csv and test.csv can be in different order, that program will take care with its header list. Label(Y) should take values 0 or 1.
@@ -14,7 +14,7 @@ Description:
 
 5) percent_val = <value between [0,100)>, This is the percentage of data to be used as validation data.
 ---------------------------------------------
-Execution: 
+# Execution: 
 execute the program as- 'python Decision_Tree.py /train.csv /test.csv'.
 
 Results: Test predictions will be printed on console.
