@@ -20,13 +20,14 @@ max_split=15
 diffrence=0.0001 #entropy difference to increase split for continuous attribute
 percent_val=0
 
-cont_col=['satisfaction_level', 'last_evaluation', 'number_project','average_montly_hours']
+cont_col=[]#list of headers of features having continues numeric values.
 
 
 header = []
 test_header=[]
 DATA = []
 TEST = []
+attributes_struct=[]
 
 for name in temp:
 	header.append(name)
@@ -53,6 +54,8 @@ val_data=DATA[traindata_len:DATA.shape[0],:]
 
 
 #**********************Slicing of continuous attributes***********************************
+# If the data has continues numeric features then 'slice' is calculated. 
+#'slice' is used to descritize the continues feature into small ranges.
 
 slice = np.zeros((3,len(cont_col)),dtype=float)
 
@@ -95,18 +98,17 @@ for col in cont_col:
 
 #********************************************************
 
-
-attributes_struct=[]
-for name in header:
-	if name in cont_col:
-		temp=[]
-		ind=cont_col.index(name)
-		for i in range(0,int(slice[0,ind])):
-			temp.extend([slice[1,ind]+((i+1) * ((slice[2,ind] - slice[1,ind])/slice[0,ind]))])
-		attributes_struct.append(temp)
-	else:
-		ind=header.index(name)
-		attributes_struct.append(list(set(traindata[:,ind])))
+def create_attributes_struc():
+	for name in header:
+		if name in cont_col:
+			temp=[]
+			ind=cont_col.index(name)
+			for i in range(0,int(slice[0,ind])):
+				temp.extend([slice[1,ind]+((i+1) * ((slice[2,ind] - slice[1,ind])/slice[0,ind]))])
+			attributes_struct.append(temp)
+		else:
+			ind=header.index(name)
+			attributes_struct.append(list(set(traindata[:,ind])))
 
 
 
@@ -194,11 +196,6 @@ def decision_tree(Node,Data,used_attr, cn):
 	else:
 		Node.child=None
 
-data=traindata.tolist()
-root=node([row[y_ind]for row in data].count('0'),[row[y_ind]for row in data].count('1'))
-used_attribute=list([y_name])
-decision_tree(root,data,used_attribute, '0')
-
 
 #********************testing******************
 
@@ -249,6 +246,16 @@ def test(Node,row):
 
 
 
+#---------------------------------------------------------------------
+#---------------------Main function-----------------------------------
+
+attributes_struct = create_attributes_struc()
+
+data=traindata.tolist()
+root=node([row[y_ind]for row in data].count('0'),[row[y_ind]for row in data].count('1'))
+used_attribute=list([y_name])
+decision_tree(root,data,used_attribute, '0')
+
 TEST=TEST.tolist()
 
 for row in TEST:
@@ -264,3 +271,5 @@ for row in val_data:
 	if int(row[y_ind])!=x:
 		mis+=1
 '''
+#---------------------------------------------------------------------
+#---------------------------------------------------------------------
